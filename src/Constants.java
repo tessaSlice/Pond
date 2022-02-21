@@ -1,5 +1,3 @@
-package newpond;
-
 //Mine!
 
 import java.awt.Color;
@@ -34,7 +32,7 @@ public interface Constants {
     //Program Constants:
     public static final int DELAY = 5;    //number of cycles between hours
     
-    public static final int NOA = 20;     //initial Number Of Animals in the pond.
+    public static final int NOA = 30;     //initial Number Of Animals in the pond.
     public static final int PIP = 18;     //standard unit size
     public static final int FOODVAL = 8;  //standard nutritional food value
     public static final int DAILY_HUNGER = 6;  //how hungry you get at the end of the day.

@@ -1,6 +1,3 @@
-package newpond;
-
-
 import java.awt.Color; 
 import java.awt.Dimension; 
 import java.awt.Graphics; 
@@ -149,7 +146,6 @@ public class Visual implements ActionListener, KeyListener, MouseListener, Mouse
             g.setFont(MEDIUM_FONT);
             g.drawString("Pond Statistics", STATSBAR + MARGIN, HIGH/5);
             g.setFont(SMALL_FONT);
-            g.drawString("(put data here)", STATSBAR + 6*MARGIN/5, HIGH/3);
             
             
             //YOUR POND STATS GO HERE.
@@ -163,6 +159,38 @@ public class Visual implements ActionListener, KeyListener, MouseListener, Mouse
             //   -- Current Ave Age
             //   ......
             
+            String temp = "Current Population: " + Control.critters.size();
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3);
+            temp = "Max population (day):" + Animal.maxPopulation;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 - 20);
+            int oldestAge = 0;
+            for (int i = 0; i < Control.critters.size(); i++) {
+            	if (Control.critters.get(i).age > oldestAge) {
+            		oldestAge = Control.critters.get(i).age;
+            	}
+            }
+            temp = "Oldest Critter Age: " + oldestAge;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 + 20);
+            //birth rate
+            temp = "Birth Rate: " + Animal.numBirthed;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 + 40);
+            //current average health
+            int avgHealth = 0;
+            int avgAge = 0;
+            for (int i = 0; i < Control.critters.size(); i++) {
+            	avgHealth += Control.critters.get(i).health; //get the total health
+            	avgAge += Control.critters.get(i).age; //get total age
+            }
+            if (Control.critters.size() != 0) {
+                avgHealth /= Control.critters.size(); //get avg health by dividing by current population
+            }
+            temp = "Current Average Health: " + avgHealth;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 + 60);
+            if (Control.critters.size() != 0) {
+                avgAge /= Control.critters.size();
+            }
+            temp = "Current Average Age: " + avgAge;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 + 80);
         }
         
         // <editor-fold defaultstate="collapsed" desc="There's nothing in here...">   

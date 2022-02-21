@@ -1,5 +1,3 @@
-package newpond;
-
 //Mine!
 
 import java.awt.Color;
@@ -24,6 +22,10 @@ public abstract class Animal implements Constants {
     public Rectangle space;
     public boolean alive;
     public boolean pregnant;
+    
+    //my own variables
+    public static int maxPopulation = NOA; //the first day
+    public static int numBirthed = 0; //set it to this rn
     
     public Animal(int x, int y)
     {

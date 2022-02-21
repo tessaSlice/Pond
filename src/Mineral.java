@@ -1,5 +1,3 @@
-package newpond;
-
 //Mine!
 
 import java.awt.Color;

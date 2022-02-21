@@ -1,5 +1,3 @@
-package newpond;
-
 //Mine!
 
 import java.awt.Graphics;
@@ -104,8 +102,14 @@ public class Control implements Constants{
             {
                 x = (int)(Math.random()*(PONDW-2*PIP)) + MARGIN + PIP;
                 y = (int)(Math.random()*(PONDH-2*PIP)) + MARGIN + PIP;
-                
-                Animal temp = new Frog(x, y);
+
+                Animal temp;
+                double randDouble = (Math.random() * 2);
+                if (randDouble < 1.5) {
+                	temp = new Frog(x, y);
+                } else {
+                	temp = new Duck(x, y);
+                }
                 placed = true;
                 for(int c = 0; placed && c < bits.size(); c++)
                     if(!bits.get(c).edible && bits.get(c).space.intersects(temp.space))
@@ -138,6 +142,8 @@ public class Control implements Constants{
         hour++;
         if(hour == 24) 
         {
+        	//MY OWN CODE: reset the number birthed by resetting
+            Animal.numBirthed = 0;
             hour = 0;
             day++;
             NextDay();
@@ -152,6 +158,10 @@ public class Control implements Constants{
         for(int n = critters.size()-1; n >= 0; n--)
             if(!critters.get(n).alive) critters.remove(n);
         
+        //MY OWN CODE: reset the max population to size of critters ArrayList
+        if (critters.size() > Animal.maxPopulation) {
+            Animal.maxPopulation = critters.size();
+        }
         
         //Adding new food...
         for(int n = 0; n < ADD_FOOD; n++)
@@ -189,5 +199,4 @@ public class Control implements Constants{
         for(int n = 0; n < critters.size(); n++)
             critters.get(n).draw(g);
     }
-    
 }
