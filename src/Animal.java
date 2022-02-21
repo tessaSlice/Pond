@@ -26,6 +26,7 @@ public abstract class Animal implements Constants {
     //my own variables
     public static int maxPopulation = NOA; //the first day
     public static int numBirthed = 0; //set it to this rn
+    public int decomposingDays;
     
     public Animal(int x, int y)
     {
@@ -42,11 +43,12 @@ public abstract class Animal implements Constants {
         space = new Rectangle(x, y, size, size);
         alive = true;
         pregnant = false;
+        decomposingDays = 0;
     }
     
     public void draw(Graphics g)
     {
-        if(!alive) return;
+//        if(!alive) return; should draw them even if they are dead
         g.drawImage(pic.getImage(), posx, posy, size, size, null);
     }
     

@@ -1,44 +1,29 @@
-//Mine!
-
 import java.awt.Rectangle;
+
 import javax.swing.ImageIcon;
 
-
-public class Frog extends Animal {
-    public static final int MINAGE = 3;
-    public static final int OLDAGE = 12;
+public class Fly extends Animal {
+    public static final int MINAGE = 2;
+    public static final int OLDAGE = 5;
     public static final int RANGE = PIP/2;
     
-    //MY OWN CODE
-    public static final int NUTRIENTS = 6;
-    
-    public Frog(int x, int y)
+    public Fly(int x, int y)
     {
         super(x, y);
-        type = "Frog";
-        pic = new ImageIcon("babyfrog.png");
+        type = "Fly";
+        pic = new ImageIcon("fly.png");
         size = 4*PIP/5;
         space = new Rectangle(x, y, size, size);
     }
-
-    
     
     public void move() 
     {
-        if(!alive) return;      //dead frogs don't move
-        if(health < 10) return; //unhealthy frogs don't move
-        
-        if(Math.random() < .25) updown();
+        if(!alive) return;      //dead ducks don't move
 
-        //Adult frogs don't move around much in the daytime...
-        if(gender > 0 && Control.Daytime() && Math.random() < .9) return;  
+        //flies only move around in nighttime
+        if(Control.Daytime()) return;
         
-        //Baby frogs are a bit more active in the daytime...
-        if(gender == 0 && Control.Daytime() && Math.random() < .4) return;  
-        
-        //If it's not daytime, all frogs are always active:
-        
-        //pick a random direction... and it moves one "frog length"
+        //pick a random direction... and it moves one "fly length"
         double ang = Math.random()*Math.PI*2;
         int x = (int)(size*Math.cos(ang));
         int y = (int)(size*Math.sin(ang));
@@ -56,15 +41,13 @@ public class Frog extends Animal {
             if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
                 empty = false;
         
-        //make sure you don't move onto another Frog
+        //make sure you don't move onto another critter
         for(int n = 0; empty && n < Control.critters.size(); n++)
             if(Control.critters.get(n) != this && Control.critters.get(n).alive && Control.critters.get(n).space.intersects(attempt))
                 empty = false;
         
         if(empty)
-        {   //If that space is open, move to the new location
-            if(posz >=0) health--; //swimming is easier, being on the water costs health
-            
+        {
             posx += x;
             posy += y;
             space = new Rectangle(posx, posy, size, size);
@@ -73,57 +56,41 @@ public class Frog extends Animal {
 
     public void act() 
     {
-        if(!alive) return;  //dead frogs don't act
+        if(!alive) return;  //dead flies don't act
         //Build a perception Rectangle to look around:
         Rectangle perception = new Rectangle(posx - RANGE, posy - RANGE, size+2*RANGE, size+2*RANGE);
         
-        for(int n = Control.bits.size()-1; n >= 0; n--)
-            if(Control.bits.get(n).edible && perception.intersects(Control.bits.get(n).space))
-            {
-                //Find food, eat food...
-                health += Control.bits.get(n).nutrients;
-                Control.bits.remove(n);
-            }
-        for (int i = Control.critters.size() - 1; i >= 0; i--) {
-        	if (Control.critters.get(i).type == "Fly" && perception.intersects(Control.critters.get(i).space)) {
-        		//eat the fly
-        		health += Control.critters.get(i).FOODVAL;
-        		Control.critters.remove(i);
+        for(int n = Control.critters.size()-1; n >= 0; n--) {
+        	if (Control.critters.get(n).alive == false && perception.intersects(Control.critters.get(n).space)) {
+        		health += Control.critters.get(n).FOODVAL;
+        		Control.critters.remove(n);
         	}
         }
         
-        //Baby Frogs and Male Frogs are done, return back.
+        //Baby flies and Male flies are done, return back.
         if(gender != 2) return;
         
-        //female frogs look for male frogs...
-        if(pregnant) return;  
+        //female flies look for male frogs...
+        if(pregnant) return;
         
         boolean found = false;
         for(int n = 0; !found && n < Control.critters.size(); n++)
         {
             Animal current = Control.critters.get(n);
-            //checks to make sure it is a Live Male Frog within perception distance
-            if(current.alive && current.gender == 1 && current.type.equals("Frog") && current.space.intersects(perception))
+            //checks to make sure it is a Live Male fly within perception distance
+            if(current.alive && current.gender == 1 && current.type.equals("Fly") && current.space.intersects(perception))
                 found = true;
         }
         if(found) pregnant = true;
     }
     
-    private void updown()
-    {
-        if(gender == 0) return;
-        
-        if(posz == 0) posz = -1;
-        else posz = 0;
-        
-        if(posz == 0) pic = new ImageIcon("adultfrog.png");
-        else pic = new ImageIcon("frogunderwater.png");
-    }
-    
     public void age() 
     {
         if(!alive) return;
-        health -= DAILY_HUNGER;
+        //flies only start losing health after they develop/mature
+        if (age >= MINAGE) {
+            health -= DAILY_HUNGER;
+        }
         
         if(pregnant)
         {
@@ -137,7 +104,7 @@ public class Frog extends Animal {
                 double ang = Math.random()*Math.PI*2;
                 int x = (int)(size*Math.cos(ang));
                 int y = (int)(size*Math.sin(ang));
-                Animal baby = new Frog(posx+x, posy+y);
+                Animal baby = new Fly(posx+x, posy+y);
                 
                 //Checking for the border and rocks and other critters...
                 boolean empty = true;
@@ -167,7 +134,7 @@ public class Frog extends Animal {
         
         
         age++;
-        if(gender == 0 && age > MINAGE) //Baby Frog is growing up
+        if(gender == 0 && age > MINAGE) //Baby Duck is growing up
         {
             //gets bigger
             size = PIP;
@@ -175,15 +142,16 @@ public class Frog extends Animal {
             
             gender++;
             if(Math.random() < .5) gender++;  //50% chance of female
-            
-            pic = new ImageIcon("adultfrog.png");
-            if(Math.random() < .5) updown();
         }
         
         if(age > OLDAGE)
         {
             if(Math.random()*100 > health)
                 alive = false;
+        }
+        
+        if(health <= 0) {
+        	alive = false;
         }
         
     }
