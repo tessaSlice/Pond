@@ -24,7 +24,7 @@ public abstract class Animal implements Constants {
     public boolean pregnant;
     
     //my own variables
-    public static int maxPopulation = 20; //the first day
+    public static int maxPopulation = NOA; //the first day
     public static int numBirthed = 0; //set it to this rn
     
     public Animal(int x, int y)

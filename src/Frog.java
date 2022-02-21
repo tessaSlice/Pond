@@ -10,7 +10,7 @@ public class Frog extends Animal {
     public static final int RANGE = PIP/2;
     
     //MY OWN CODE
-    public static final int NUTRIENTS = 5;
+    public static final int NUTRIENTS = 6;
     
     public Frog(int x, int y)
     {
@@ -178,7 +178,6 @@ public class Frog extends Animal {
             if(Math.random()*100 > health)
                 alive = false;
         }
-        
         
     }
     

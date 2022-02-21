@@ -103,11 +103,10 @@ public class Control implements Constants{
                 x = (int)(Math.random()*(PONDW-2*PIP)) + MARGIN + PIP;
                 y = (int)(Math.random()*(PONDH-2*PIP)) + MARGIN + PIP;
 
-                //MY OWN CODE:
                 Animal temp;
-                int randInt = (int) (Math.random() * 2);
-                if (randInt == 0) {
-                    temp = new Frog(x, y);
+                double randDouble = (Math.random() * 2);
+                if (randDouble < 1.5) {
+                	temp = new Frog(x, y);
                 } else {
                 	temp = new Duck(x, y);
                 }
