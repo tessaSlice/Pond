@@ -1,8 +1,5 @@
 //The Main for the Pond Task
 
-package newpond;
-
-
 public class NewPond 
 {
     public static void main(String[] args) 
@@ -14,4 +11,3 @@ public class NewPond
 
     }
 }
-

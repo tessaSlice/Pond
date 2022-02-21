@@ -1,22 +1,17 @@
-//Mine!
-
 import java.awt.Rectangle;
+
 import javax.swing.ImageIcon;
 
-
-public class Frog extends Animal {
+public class Duck extends Animal {
     public static final int MINAGE = 3;
     public static final int OLDAGE = 12;
     public static final int RANGE = PIP/2;
     
-    //MY OWN CODE
-    public static final int NUTRIENTS = 5;
-    
-    public Frog(int x, int y)
+    public Duck(int x, int y)
     {
         super(x, y);
-        type = "Frog";
-        pic = new ImageIcon("babyfrog.png");
+        type = "Duck";
+        pic = new ImageIcon("duck.png");
         size = 4*PIP/5;
         space = new Rectangle(x, y, size, size);
     }
@@ -25,20 +20,21 @@ public class Frog extends Animal {
     
     public void move() 
     {
-        if(!alive) return;      //dead frogs don't move
-        if(health < 10) return; //unhealthy frogs don't move
+        if(!alive) return;      //dead ducks don't move
+        if(health < 10) return; //unhealthy ducks don't move
         
         if(Math.random() < .25) updown();
 
-        //Adult frogs don't move around much in the daytime...
-        if(gender > 0 && Control.Daytime() && Math.random() < .9) return;  
+        //half of adult ducks should move around during daytime
+        if(gender > 0 && Control.Daytime() && Math.random() < .5) return;
         
-        //Baby frogs are a bit more active in the daytime...
-        if(gender == 0 && Control.Daytime() && Math.random() < .4) return;  
+        //Baby ducks are a bit more active in the daytime...
+        if(gender == 0 && Control.Daytime() && Math.random() < .1) return;  
         
-        //If it's not daytime, all frogs are always active:
+        //If it's not daytime, all ducks are not active:
+        if(!Control.Daytime()) return; //ducks go to "sleep"/don't move
         
-        //pick a random direction... and it moves one "frog length"
+        //pick a random direction... and it moves one "duck length"
         double ang = Math.random()*Math.PI*2;
         int x = (int)(size*Math.cos(ang));
         int y = (int)(size*Math.sin(ang));
@@ -56,7 +52,7 @@ public class Frog extends Animal {
             if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
                 empty = false;
         
-        //make sure you don't move onto another Frog
+        //make sure you don't move onto another critter
         for(int n = 0; empty && n < Control.critters.size(); n++)
             if(Control.critters.get(n) != this && Control.critters.get(n).alive && Control.critters.get(n).space.intersects(attempt))
                 empty = false;
@@ -73,17 +69,22 @@ public class Frog extends Animal {
 
     public void act() 
     {
-        if(!alive) return;  //dead frogs don't act
+        if(!alive) return;  //dead ducks don't act
         //Build a perception Rectangle to look around:
         Rectangle perception = new Rectangle(posx - RANGE, posy - RANGE, size+2*RANGE, size+2*RANGE);
         
-        for(int n = Control.bits.size()-1; n >= 0; n--)
-            if(Control.bits.get(n).edible && perception.intersects(Control.bits.get(n).space))
-            {
-                //Find food, eat food...
-                health += Control.bits.get(n).nutrients;
-                Control.bits.remove(n);
-            }
+        for(int n = Control.critters.size()-1; n >= 0; n--) {
+//          if(Control.bits.get(n).edible && perception.intersects(Control.bits.get(n).space))
+//          {
+//              //Find frog, eat it...
+//              health += Control.bits.get(n).nutrients;
+//              Control.bits.remove(n);
+//          }
+        	if (Control.critters.get(n).type == "Frog" && perception.intersects(Control.critters.get(n).space)) {
+        		health += Control.critters.get(n).FOODVAL;
+        		Control.critters.remove(n);
+        	}
+        }
         
         //Baby Frogs and Male Frogs are done, return back.
         if(gender != 2) return;
@@ -109,8 +110,9 @@ public class Frog extends Animal {
         if(posz == 0) posz = -1;
         else posz = 0;
         
-        if(posz == 0) pic = new ImageIcon("adultfrog.png");
-        else pic = new ImageIcon("frogunderwater.png");
+        //ducks don't evolve, they stay as ducks
+//        if(posz == 0) pic = new ImageIcon("adultfrog.png");
+//        else pic = new ImageIcon("frogunderwater.png");
     }
     
     public void age() 
@@ -169,7 +171,8 @@ public class Frog extends Animal {
             gender++;
             if(Math.random() < .5) gender++;  //50% chance of female
             
-            pic = new ImageIcon("adultfrog.png");
+            //ducks don't evolve into new ducks
+//            pic = new ImageIcon("adultfrog.png");
             if(Math.random() < .5) updown();
         }
         
