@@ -7,6 +7,8 @@ public class Duck extends Animal {
     public static final int OLDAGE = 17;
     public static final int RANGE = PIP/2;
     
+    public boolean flying;
+    
     public Duck(int x, int y)
     {
         super(x, y);
@@ -14,6 +16,7 @@ public class Duck extends Animal {
         pic = new ImageIcon("duck.png");
         size = 4*PIP/5;
         space = new Rectangle(x, y, size, size);
+        flying = false;
     }
     
     public void move() 
@@ -39,15 +42,17 @@ public class Duck extends Animal {
         if(posx + x > MARGIN + PONDW - size - 2) empty = false;
         if(posy + y > MARGIN + PONDH - size - 2) empty = false;
         
-        //make sure you don't move onto a Rock
-        for(int n = 0; empty && n < Control.bits.size(); n++)
-            if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
-                empty = false;
-        
         //make sure you don't move onto another critter
         for(int n = 0; empty && n < Control.critters.size(); n++)
             if(Control.critters.get(n) != this && Control.critters.get(n).alive && Control.critters.get(n).space.intersects(attempt))
                 empty = false;
+        
+        for(int n = 0; empty && n < Control.bits.size(); n++)
+            if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
+                //it can move onto a Rock, it just has to enable the flying movement you know?
+            	flying = true;
+            	changeFlyingStatus();
+            	flying = false;
         
         if(empty)
         {
@@ -55,6 +60,15 @@ public class Duck extends Animal {
             posy += y;
             space = new Rectangle(posx, posy, size, size);
         }
+    }
+    
+    public void changeFlyingStatus() {
+    	if (flying) {
+    		pic = new ImageIcon("flyingduck.png");
+    	} else {
+    		//it's not flying
+    		pic = new ImageIcon("duck.png");
+    	}
     }
 
     public void act() 
