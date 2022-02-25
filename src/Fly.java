@@ -36,11 +36,6 @@ public class Fly extends Animal {
         if(posx + x > MARGIN + PONDW - size - 2) empty = false;
         if(posy + y > MARGIN + PONDH - size - 2) empty = false;
         
-        //make sure you don't move onto a Rock
-        for(int n = 0; empty && n < Control.bits.size(); n++)
-            if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
-                empty = false;
-        
         //make sure you don't move onto another critter
         for(int n = 0; empty && n < Control.critters.size(); n++)
             if(Control.critters.get(n) != this && Control.critters.get(n).alive && Control.critters.get(n).space.intersects(attempt))

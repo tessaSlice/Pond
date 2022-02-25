@@ -175,15 +175,7 @@ public class Control implements Constants{
         	}
         }
         
-        //MY OWN CODE: reset the max population to size of critters ArrayList, gotta update it to check for alive popuation
-        
-        //check for amount of critters dead but still in the array
-        int aliveCount = 0;
-        for (int i = 0; i < critters.size(); i++) {
-        	if (critters.get(i).alive) aliveCount++;
-        }
-        System.out.println("Number of critters actually alive: " + aliveCount);
-        
+        //reset the max population to size of critters ArrayList, gotta update it to check for alive popuation
         if (critters.size() > Animal.maxPopulation) {
             Animal.maxPopulation = critters.size();
         }

@@ -159,10 +159,17 @@ public class Visual implements ActionListener, KeyListener, MouseListener, Mouse
             //   -- Current Ave Age
             //   ......
             
-            String temp = "Current Population: " + Control.critters.size();
-            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3);
-            temp = "Max population (day):" + Animal.maxPopulation;
+            String temp = "Total Population with Dead: " + Control.critters.size();
             g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 - 20);
+            //checks for the number of critters currently alive
+            int aliveCount = 0;
+            for (int i = 0; i < Control.critters.size(); i++) {
+            	if (Control.critters.get(i).alive) aliveCount++;
+            }
+            temp = "Current Alive Animal Population: " + aliveCount;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3 - 40);
+            temp = "Max population (day):" + Animal.maxPopulation;
+            g.drawString(temp, STATSBAR + 6*MARGIN/5, HIGH/3);
             int oldestAge = 0;
             for (int i = 0; i < Control.critters.size(); i++) {
             	if (Control.critters.get(i).age > oldestAge) {
