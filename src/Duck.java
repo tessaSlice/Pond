@@ -6,8 +6,10 @@ public class Duck extends Animal {
     public static final int MINAGE = 5;
     public static final int OLDAGE = 17;
     public static final int RANGE = PIP/2;
+    public static final boolean CONTAINS_MUTANTS = true;
     
     public boolean flying;
+    public boolean mutant;
     
     public Duck(int x, int y)
     {
@@ -17,6 +19,17 @@ public class Duck extends Animal {
         size = 4*PIP/5;
         space = new Rectangle(x, y, size, size);
         flying = false;
+        //standard is to make mutants false
+        mutant = false;
+        if (CONTAINS_MUTANTS) {
+        	//make ducks have a chance of being a "mutant"
+        	double rand = Math.random();
+        	if (rand < .1) {
+        		mutant = true;
+//        		System.out.println("Created a mutant.");
+        		pic = new ImageIcon("mutantduck.png");
+        	}
+        }
     }
     
     public void move() 
@@ -64,10 +77,18 @@ public class Duck extends Animal {
     
     public void changeFlyingStatus() {
     	if (flying) {
-    		pic = new ImageIcon("flyingduck.png");
+    		if (!mutant) {
+        		pic = new ImageIcon("flyingduck.png");
+    		} else {
+    			pic = new ImageIcon("mutantduckflying.png");
+    		}
     	} else {
     		//it's not flying
-    		pic = new ImageIcon("duck.png");
+    		if (!mutant) {
+        		pic = new ImageIcon("duck.png");
+    		} else {
+    			pic = new ImageIcon("mutantduck.png");
+    		}
     	}
     }
 
@@ -170,6 +191,43 @@ public class Duck extends Animal {
         
         if(health <= 0) {
         	alive = false;
+        }
+        
+        if (!alive && mutant) {
+//        	dead mutants "explode" and distribute nutrients, distributes 10 nutrients max
+//        	loops 10 times
+        	for (int i = 0; i < 10; i++) {
+        		//pick a random direction... and it moves one "nutrient length"
+                double ang = Math.random()*Math.PI*2;
+                int x = (int)(size*Math.cos(ang));
+                int y = (int)(size*Math.sin(ang));
+                
+                //check if that space is open
+                Rectangle attempt = new Rectangle(posx + x, posy + y, size, size);
+                boolean empty = true;
+                if(posx + x < MARGIN + 2) empty = false;
+                if(posy + y < MARGIN + 2) empty = false;
+                if(posx + x > MARGIN + PONDW - size - 2) empty = false;
+                if(posy + y > MARGIN + PONDH - size - 2) empty = false;
+            	
+                //make sure you don't move onto a Rock
+                for(int n = 0; empty && n < Control.bits.size(); n++)
+                    if(!Control.bits.get(n).edible && Control.bits.get(n).space.intersects(attempt))
+                        empty = false;
+                
+                //make sure you don't move onto another Frog
+                for(int n = 0; empty && n < Control.critters.size(); n++)
+                    if(Control.critters.get(n) != this && Control.critters.get(n).alive && Control.critters.get(n).space.intersects(attempt))
+                        empty = false;
+                
+                //Food is only placed in open spaces
+                if(empty)
+                {
+                	Control.bits.add(new Mineral(posx + x,  posy + y, true));
+                }
+        	}
+        	
+        	Control.critters.remove(this);
         }
         
     }
