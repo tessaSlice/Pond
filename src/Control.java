@@ -104,11 +104,13 @@ public class Control implements Constants{
                 y = (int)(Math.random()*(PONDH-2*PIP)) + MARGIN + PIP;
 
                 Animal temp;
-                double randDouble = (Math.random() * 2);
-                if (randDouble < 1.5) {
+                double randDouble = (Math.random() * 5);
+                if (randDouble < 2) {
                 	temp = new Frog(x, y);
-                } else {
+                } else if (randDouble < 3) {
                 	temp = new Duck(x, y);
+                } else {
+                	temp = new Fly(x, y);
                 }
                 placed = true;
                 for(int c = 0; placed && c < bits.size(); c++)
@@ -155,10 +157,25 @@ public class Control implements Constants{
         for(int n = critters.size()-1; n >= 0; n--)
             critters.get(n).age();
         
-        for(int n = critters.size()-1; n >= 0; n--)
-            if(!critters.get(n).alive) critters.remove(n);
+        for (int n = critters.size()-1; n>=0; n--) {
+        	if (!critters.get(n).alive && critters.get(n).type=="Fly") {
+        		//turn the dead fly into a mineral
+        		bits.add(new Mineral(critters.get(n).posx, critters.get(n).posy, true));
+        		critters.remove(n);
+        	}
+        }
         
-        //MY OWN CODE: reset the max population to size of critters ArrayList
+        //set a decaying counter, adds decomposingDays if they aren't alive but isn't to 3, once it reaches 3 you just remove the critter
+        for (int n = critters.size()-1; n >= 0; n--) {
+        	if (!critters.get(n).alive && critters.get(n).decomposingDays < 3) {
+        		critters.get(n).decomposingDays++;
+        	} 
+        	if (!critters.get(n).alive && critters.get(n).decomposingDays >= 3) {
+        		critters.remove(n);
+        	}
+        }
+        
+        //reset the max population to size of critters ArrayList, gotta update it to check for alive popuation
         if (critters.size() > Animal.maxPopulation) {
             Animal.maxPopulation = critters.size();
         }

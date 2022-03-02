@@ -98,9 +98,17 @@ public class Duck extends Animal {
         //Build a perception Rectangle to look around:
         Rectangle perception = new Rectangle(posx - RANGE, posy - RANGE, size+2*RANGE, size+2*RANGE);
         
+        for(int n = Control.bits.size()-1; n >= 0; n--)
+            if(Control.bits.get(n).edible && perception.intersects(Control.bits.get(n).space))
+            {
+                //Find food, eat food...
+                health += Control.bits.get(n).nutrients;
+                Control.bits.remove(n);
+            }
+        
         for(int n = Control.critters.size()-1; n >= 0; n--) {
         	if (Control.critters.get(n).type == "Frog" && perception.intersects(Control.critters.get(n).space)) {
-        		health += Control.critters.get(n).FOODVAL;
+        		health += Control.critters.get(n).FOODVAL; //should be nutrients ngl for frog, update this later?
         		Control.critters.remove(n);
         	}
         }
