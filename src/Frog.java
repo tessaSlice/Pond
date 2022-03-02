@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 public class Frog extends Animal {
     public static final int MINAGE = 3;
-    public static final int OLDAGE = 12;
+    public static final int OLDAGE = 10;
     public static final int RANGE = PIP/2;
     
     //MY OWN CODE

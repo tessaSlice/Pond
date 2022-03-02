@@ -1,10 +1,10 @@
 import java.awt.Rectangle;
-
+import java.awt.Graphics;
 import javax.swing.ImageIcon;
 
 public class Duck extends Animal {
     public static final int MINAGE = 5;
-    public static final int OLDAGE = 17;
+    public static final int OLDAGE = 14;
     public static final int RANGE = PIP/2;
     public static final boolean CONTAINS_MUTANTS = true;
     
@@ -26,7 +26,7 @@ public class Duck extends Animal {
         	double rand = Math.random();
         	if (rand < .1) {
         		mutant = true;
-//        		System.out.println("Created a mutant.");
+        		type = "mutant"; //for fly to check so it doesn't eat it
         		pic = new ImageIcon("mutantduck.png");
         	}
         }
@@ -193,13 +193,16 @@ public class Duck extends Animal {
         
         if(age > OLDAGE)
         {
-            if(Math.random()*100 > health)
-                alive = false;
+            if(Math.random()*100 > health) {
+            	alive = false;
+            	if (mutant) pic = new ImageIcon("explosion.gif");
+            }
         }
         
         if(health <= 0) {
         	alive = false;
-        }
+        	if (mutant) pic = new ImageIcon("explosion.gif");
+        } 
         
         if (!alive && mutant) {
 //        	dead mutants "explode" and distribute nutrients, distributes 10 nutrients max
@@ -235,10 +238,18 @@ public class Duck extends Animal {
                 }
         	}
         	
-        	Control.critters.remove(this);
+//        	Control.critters.remove(this);
         }
-        
     }
     
-
+    public void draw(Graphics g) {
+    	if (!alive && mutant) {
+        	NuclearZone deathZone = new NuclearZone(posx, posy, size);
+        	deathZone.draw(g);
+    		g.drawImage(pic.getImage(), posx, posy, size, size, null);
+    	} else {
+    		g.drawImage(pic.getImage(), posx, posy, size, size, null);
+    	}
+    }
+    
 }
