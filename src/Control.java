@@ -107,10 +107,12 @@ public class Control implements Constants{
                 double randDouble = (Math.random() * 5);
                 if (randDouble < 2) {
                 	temp = new Frog(x, y);
-                } else if (randDouble < 3) {
+                } else if (randDouble < 2.5) {
                 	temp = new Duck(x, y);
-                } else if (randDouble < 4){
+                } else if (randDouble < 3){
                 	temp = new MagiKarp(x, y);
+                } else if (randDouble < 4){
+                	temp = new SnappingTurtle(x, y);
                 } else {
                 	temp = new Fly(x, y);
                 }
