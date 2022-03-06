@@ -1,10 +1,10 @@
 import java.awt.Rectangle;
-
+import java.awt.Graphics;
 import javax.swing.ImageIcon;
 
 public class Duck extends Animal {
     public static final int MINAGE = 5;
-    public static final int OLDAGE = 17;
+    public static final int OLDAGE = 14;
     public static final int RANGE = PIP/2;
     public static final boolean CONTAINS_MUTANTS = true;
     
@@ -26,7 +26,7 @@ public class Duck extends Animal {
         	double rand = Math.random();
         	if (rand < .1) {
         		mutant = true;
-//        		System.out.println("Created a mutant.");
+        		type = "mutant"; //for fly to check so it doesn't eat it
         		pic = new ImageIcon("mutantduck.png");
         	}
         }
@@ -193,16 +193,27 @@ public class Duck extends Animal {
         
         if(age > OLDAGE)
         {
-            if(Math.random()*100 > health)
-                alive = false;
+            if(Math.random()*100 > health) {
+            	alive = false;
+            	if (mutant) pic = new ImageIcon("explosion.gif");
+            }
         }
         
         if(health <= 0) {
         	alive = false;
+        	if (mutant) pic = new ImageIcon("explosion.gif");
         }
         
         if (!alive && mutant) {
-//        	dead mutants "explode" and distribute nutrients, distributes 10 nutrients max
+//        	dead mutants "explode" (thus killing nearby animals initially) and distribute nutrients, distributes 10 nutrients max
+        	
+//        	kill all animals that encounter the death zone initially, only one time
+//			iterate throughout the entire critters array to see if any animals are affected
+        	for (int i = Control.critters.size()-1; i >= 0; i--) {
+        		if (Control.critters.get(i) != this && intersectsDeathZone(Control.critters.get(i).posx, Control.critters.get(i).posy)) {
+        			Control.critters.remove(i);
+        		}
+        	}
 //        	loops 10 times
         	for (int i = 0; i < 10; i++) {
         		//pick a random direction... and it moves one "nutrient length"
@@ -235,10 +246,27 @@ public class Duck extends Animal {
                 }
         	}
         	
-        	Control.critters.remove(this);
+//        	Control.critters.remove(this);
         }
-        
     }
     
-
+    public void draw(Graphics g) {
+    	if (!alive && mutant) {
+        	NuclearZone deathZone = new NuclearZone(posx, posy, size);
+        	deathZone.draw(g);
+    		g.drawImage(pic.getImage(), posx, posy, size, size, null);
+    	} else {
+    		g.drawImage(pic.getImage(), posx, posy, size, size, null);
+    	}
+    }
+    
+    public boolean intersectsDeathZone(int x, int y) {
+    	int startx = posx + size/2;
+    	int endx = posx - size/2;
+    	int starty = posy + size/2;
+    	int endy = posy - size/2;
+    	if (x < startx && x > endx && y < starty && y > endy) return true;
+    	else return false;
+    }
+    
 }

@@ -56,7 +56,7 @@ public class Fly extends Animal {
         Rectangle perception = new Rectangle(posx - RANGE, posy - RANGE, size+2*RANGE, size+2*RANGE);
         
         for(int n = Control.critters.size()-1; n >= 0; n--) {
-        	if (Control.critters.get(n).alive == false && perception.intersects(Control.critters.get(n).space)) {
+        	if (Control.critters.get(n).alive == false && perception.intersects(Control.critters.get(n).space) && !Control.critters.get(n).type.equals("mutant")) {
         		health += Control.critters.get(n).FOODVAL;
         		Control.critters.remove(n);
         	}
