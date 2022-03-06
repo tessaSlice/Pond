@@ -109,6 +109,8 @@ public class Control implements Constants{
                 	temp = new Frog(x, y);
                 } else if (randDouble < 3) {
                 	temp = new Duck(x, y);
+                } else if (randDouble < 4){
+                	temp = new MagiKarp(x, y);
                 } else {
                 	temp = new Fly(x, y);
                 }
