@@ -202,10 +202,18 @@ public class Duck extends Animal {
         if(health <= 0) {
         	alive = false;
         	if (mutant) pic = new ImageIcon("explosion.gif");
-        } 
+        }
         
         if (!alive && mutant) {
-//        	dead mutants "explode" and distribute nutrients, distributes 10 nutrients max
+//        	dead mutants "explode" (thus killing nearby animals initially) and distribute nutrients, distributes 10 nutrients max
+        	
+//        	kill all animals that encounter the death zone initially, only one time
+//			iterate throughout the entire critters array to see if any animals are affected
+        	for (int i = Control.critters.size()-1; i >= 0; i--) {
+        		if (Control.critters.get(i) != this && intersectsDeathZone(Control.critters.get(i).posx, Control.critters.get(i).posy)) {
+        			Control.critters.remove(i);
+        		}
+        	}
 //        	loops 10 times
         	for (int i = 0; i < 10; i++) {
         		//pick a random direction... and it moves one "nutrient length"
@@ -250,6 +258,15 @@ public class Duck extends Animal {
     	} else {
     		g.drawImage(pic.getImage(), posx, posy, size, size, null);
     	}
+    }
+    
+    public boolean intersectsDeathZone(int x, int y) {
+    	int startx = posx + size/2;
+    	int endx = posx - size/2;
+    	int starty = posy + size/2;
+    	int endy = posy - size/2;
+    	if (x < startx && x > endx && y < starty && y > endy) return true;
+    	else return false;
     }
     
 }
