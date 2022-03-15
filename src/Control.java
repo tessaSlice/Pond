@@ -113,8 +113,10 @@ public class Control implements Constants{
                 	temp = new MagiKarp(x, y);
                 } else if (randDouble < 4){
                 	temp = new SnappingTurtle(x, y);
-                } else {
+                } else if (randDouble < 4.5){
                 	temp = new Fly(x, y);
+                } else {
+                	temp = new Osprey(x, y);
                 }
                 placed = true;
                 for(int c = 0; placed && c < bits.size(); c++)

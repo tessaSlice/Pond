@@ -135,7 +135,6 @@ public class SnappingTurtle extends Animal {
 	}
 	private void attack()
 	{
-        size = 45;
         pic = new ImageIcon("finalexplode.png");
         alive = false;
         explode = true;
@@ -195,7 +194,7 @@ public class SnappingTurtle extends Animal {
             space = new Rectangle(posx, posy, size, size);
             
             gender++;
-            size = 29;
+            size = PIP * 7/5;
             if(Math.random() < .5) gender++;  //50% chance of female
             
             pic = new ImageIcon("adultturtle.png");
